@@ -1,2 +1,2 @@
-# Sketch2Fashion-
+# Sketch2Fashion
 CS 230 Project 
