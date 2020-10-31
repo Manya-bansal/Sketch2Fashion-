@@ -1,3 +1,13 @@
+"""
+@article: pix2pix2016,
+@title:Image-to-Image Translation with Conditional Adversarial Networks
+@author: Isola, Phillip and Zhu, Jun-Yan and Zhou, Tinghui and Efros, Alexei A
+@journal= arxiv
+@year= 2016
+
+@Note: Most parts of this code was written in the original implementation of Pix2Pix.
+       We, Sketch2Fashion team only made a small adjustment in resize() function to adapt to our dataset.
+"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -29,29 +39,26 @@ parser.add_argument("--size", type=int, default=256, help="size to use for resiz
 parser.add_argument("--b_dir", type=str, help="path to folder containing B images for combine operation")
 a = parser.parse_args()
 
-
+"""
+Author: Vy Thai
+Funtion: resize() take an non-square input image shaped(762,1100) and adding white padding to the left and right 
+size to make it square before resizing to 256x256
+@arg src: image 
+@return: new resized image
+"""
 def resize(src):
     dst = np.pad(src, ((0, 0), (169, 169), (0,0)), 'constant', constant_values= (255,255))
-
     height, width, _ = dst.shape
 
-    print(height, width)
     if height != width:
-        #if a.pad:
         size = max(height, width)
-            # pad to correct ratio
         oh = (size - height) // 2
         ow = (size - width) // 2
         dst = im.pad(image=dst, offset_height=oh, offset_width=ow, target_height=size, target_width=size)
-        #else:
-            # crop to correct ratio
-            #size = min(height, width)
-            #oh = (height - size) // 2
-            #ow = (width - size) // 2
-            #dst = im.crop(image=dst, offset_height=oh, offset_width=ow, target_height=size, target_width=size)
 
     assert(dst.shape[0] == dst.shape[1])
 
+    #Reference to the oiginal Pix2Pix code for the following section
     size, _, _ = dst.shape
     if size > a.size:
         dst = im.downscale(images=dst, size=[a.size, a.size])
